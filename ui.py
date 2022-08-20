@@ -62,8 +62,15 @@ def show_tab(show_content):
         ])
 
 
+async def refresh_content(show_content):
+    async for data in get_clipboard_contents():
+        if show_content and show_content[0]["hash"] == data["hash"]: continue
+        show_content.insert(0, data)
+        show_tab(show_content)
+
+
 async def main():
-    """Markdown Previewer"""
+    """History Copyboard"""
     set_env(output_animation=False)
     put_markdown('## 历史剪切板')
     if not os.path.exists("history_data.json"):
@@ -71,11 +78,18 @@ async def main():
             f.write("[]")
     with open('history_data.json', 'r', encoding='utf8')as fp:
         show_content = json.load(fp)
+
+    put_input("search_content", placeholder="搜索框")
+    show_content = show_content[:100]
     show_tab(show_content)
-    async for data in get_clipboard_contents():
-        if show_content and show_content[0]["hash"] == data["hash"]: continue
-        show_content.insert(0, data)
-        show_tab(show_content)
+
+    refresh_task = run_async(refresh_content(show_content))
+
+    while 1:
+        data = await pin_wait_change('search_content')
+        show_tab([content for content in show_content if data["value"] in content["content"]])
+
+    refresh_task.close()
 
 if __name__ == '__main__':
     start_server(main, port=8080, debug=True)
