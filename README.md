@@ -18,3 +18,6 @@
 
 ## 打包
 https://pywebio.readthedocs.io/zh_CN/latest/libraries_support.html
+
+## 文字识别
+https://cloud.baidu.com/doc/OCR/s/zk3h7xz52
