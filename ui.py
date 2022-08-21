@@ -7,6 +7,7 @@ from copy_tools import *
 import asyncio
 import pyperclip
 import win32gui
+from main import *
 
 def edit_row(choice, row):
     if choice["type"] == "text":
@@ -64,6 +65,9 @@ def show_tab(show_content):
 
 async def main():
     """Markdown Previewer"""
+
+
+
     set_env(output_animation=False)
     put_markdown('## 历史剪切板')
     if not os.path.exists("history_data.json"):

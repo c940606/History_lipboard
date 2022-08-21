@@ -15,3 +15,6 @@
 `python ui.py`
 
 `python main.py`
+
+## 打包
+https://pywebio.readthedocs.io/zh_CN/latest/libraries_support.html

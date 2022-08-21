@@ -4,7 +4,9 @@ from pynput import keyboard
 import subprocess
 import pyautogui
 import os
-import pythoncom
+from get_browser_path import get_browser_path
+
+
 
 def on_press(key):
     try:
@@ -20,10 +22,13 @@ def on_press(key):
 def on_activate_c():
     # https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
     # global cur_hWnd
+    print("xxx")
     cur_hWnd = win32gui.FindWindow(None, "Markdown Previewer")
     cur_path = os.path.dirname(__file__)
+    print(cur_hWnd)
     if not cur_hWnd:
-        cmd = fr'"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --chrome-frame --user-data-dir="{cur_path}\tmp-chrome"  --app=http://127.0.0.1:8080 --window-size=1000,800 "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --chrome-frame --user-data-dir=".\tmp-chrome"  --app=http://127.0.0.1:8080 --window-size=1000,800"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --chrome-frame --user-data-dir=".\tmp-chrome"  --app=http://127.0.0.1:8080 --window-size=1000,800 '
+        cmd = fr'"{get_browser_path("edge")}" --chrome-frame --user-data-dir="{cur_path}\tmp-chrome"  --app=http://127.0.0.1:8080 --window-size=1000,800 "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --chrome-frame --user-data-dir=".\tmp-chrome"  --app=http://127.0.0.1:8080 --window-size=1000,800"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --chrome-frame --user-data-dir=".\tmp-chrome"  --app=http://127.0.0.1:8080 --window-size=1000,800 '
+        print(cmd)
         subprocess.Popen(cmd, shell=True) # 后台运行
         while not cur_hWnd:
             cur_hWnd = win32gui.FindWindow(None, "Markdown Previewer")
@@ -42,10 +47,13 @@ def on_activate_c():
                           win32con.SWP_NOOWNERZORDER | win32con.SWP_NOSIZE | win32con.SWP_NOMOVE) # 置顶窗口
     # shell.SendKeys('%')
 
+if __name__ == '__main__':
 
-h = keyboard.GlobalHotKeys({'<alt>+c': on_activate_c})
-listener = keyboard.Listener(on_press=on_press)
-listener.start()
-h.start()
-listener.join()
-h.join()
+    h = keyboard.GlobalHotKeys({'<alt>+c': on_activate_c})
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+    h.start()
+
+
+    listener.join()
+    h.join()
